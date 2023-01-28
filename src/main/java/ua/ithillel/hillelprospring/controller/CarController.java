@@ -16,6 +16,10 @@ public class CarController {
         this.carService = carService;
     }
 
+    public CarController() {
+
+    }
+
     public List<Car> getAll() {
         return carService.getAll();
     }

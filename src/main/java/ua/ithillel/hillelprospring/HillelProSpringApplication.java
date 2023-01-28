@@ -2,9 +2,7 @@ package ua.ithillel.hillelprospring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ua.ithillel.hillelprospring.configuration.BeanCarConfiguration;
-import ua.ithillel.hillelprospring.configuration.BeanConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 import ua.ithillel.hillelprospring.controller.CarController;
 import ua.ithillel.hillelprospring.model.Car;
 import ua.ithillel.hillelprospring.model.TvSet;
@@ -13,8 +11,8 @@ import ua.ithillel.hillelprospring.model.TvSet;
 public class HillelProSpringApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(HillelProSpringApplication.class, args);
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(BeanConfiguration.class);
+        ConfigurableApplicationContext context = SpringApplication.run(HillelProSpringApplication.class, args);
+
         System.out.println("Singleton");
         String helloBean = context.getBean("helloBean", String.class);
         String helloAgainBean = context.getBean("helloBean", String.class);
@@ -33,13 +31,20 @@ public class HillelProSpringApplication {
         System.out.println(ferrari.getModel() + " == " + audi.getModel() + ": " + (ferrari == audi));
         System.out.println(ferrari);
         System.out.println(audi);
+
         TvSet tvSet = context.getBean("tvBean", TvSet.class);
         System.out.println(tvSet);
 
+        System.out.println("\nApplication properties: ");
+        System.out.println("car.type: " + audi.getType());
+        System.out.println("tvSet.name: " + tvSet.getName());
+        System.out.println("tvSet.chanel: " + tvSet.getChanel());
+        System.out.println("tvSet.volume: " + tvSet.getVolume());
+
         System.out.println("\nGet all cars from repository\n");
-        AnnotationConfigApplicationContext contextCar = new AnnotationConfigApplicationContext(BeanCarConfiguration.class);
-        CarController carController = contextCar.getBean(CarController.class);
+        CarController carController = context.getBean(CarController.class);
         carController.getAll().forEach(System.out::println);
+
 
     }
 

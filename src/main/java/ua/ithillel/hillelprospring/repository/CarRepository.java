@@ -1,13 +1,11 @@
 package ua.ithillel.hillelprospring.repository;
 
-import lombok.Getter;
 import org.springframework.stereotype.Repository;
 import ua.ithillel.hillelprospring.model.Car;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Repository
 public class CarRepository {
     private List<Car> cars;

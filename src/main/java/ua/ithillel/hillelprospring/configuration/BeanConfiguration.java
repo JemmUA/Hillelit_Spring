@@ -9,7 +9,6 @@ import ua.ithillel.hillelprospring.model.TvSet;
 @PropertySource("classpath:application.properties")
 public class BeanConfiguration {
     @Bean
-    @Scope("singleton")
     public String helloBean() {
         return "Hello, Spring! :)";
     }
@@ -25,6 +24,4 @@ public class BeanConfiguration {
     public TvSet tvBean() {
         return new TvSet();
     }
-
-
 }

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @ToString
 @Component
 public class TvSet {
-    @Value("${tv.name}")
+    @Value("${tvSet.name}")
     String name;
-    @Value("${tv.chanel}")
+    @Value("${tvSet.chanel}")
     int chanel;
-    @Value("${tv.volume}")
+    @Value("${tvSet.volume}")
     int volume;
 }
