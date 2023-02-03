@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public class UserService {
+    //    private final FakeUserRepository userRepository;
     private final UserRepository userRepository;
 
     @Autowired
@@ -17,30 +18,41 @@ public class UserService {
     }
 
     public List<User> getAll() {
-        return userRepository.getAll();
+
+        return userRepository.findAll();
     }
 
     public User getById(Integer id) {
-        return userRepository.getById(id);
+        return userRepository.findById(id).orElseThrow();
     }
 
-    public List<User> getByMailAndPhone(String email, Long phone) {
-        return userRepository.getByMailAndPhone(email, phone);
+//    public Optional<User> getOptionalById(Integer id) {
+//        return userRepository.findById(id);
+//        return userRepository.getById(id);
+//}
+
+    public List<User> getByEmailAndPhone(String email, Long phone) {
+        return userRepository.getUsersByEmailAndPhone(email, phone);
     }
 
-    public List<User> getByNameAndPhoneAndAge(String name, Long phone, Integer age) {
-        return userRepository.getByNameAndPhoneAndAge(name, phone, age);
+    public List<User> getByNameOrPhoneOrAge(String name, Long phone, Integer age) {
+        return userRepository.getUsersByNameOrPhoneOrAge(name, phone, age);
     }
 
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User update(Integer id, User user) {
-        return userRepository.update(id, user);
+    public User update(User user) {
+        return userRepository.save(user);
     }
 
-    public Integer delete(int id) {
-        return userRepository.delete(id);
+    public Integer delete(Integer id) {
+        userRepository.deleteById(id);
+        return id;
+    }
+
+    public Integer updatePhoneById(Integer id, Long phone) {
+        return userRepository.updatePhoneById(id, phone);
     }
 }

@@ -1,8 +1,12 @@
 package ua.ithillel.hillelprospring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.ithillel.hillelprospring.model.User;
+import ua.ithillel.hillelprospring.controller.dto.IntegerDto;
+import ua.ithillel.hillelprospring.controller.dto.UserDto;
+import ua.ithillel.hillelprospring.controller.mapper.UserMapper;
 import ua.ithillel.hillelprospring.service.UserService;
 
 import java.util.List;
@@ -11,6 +15,8 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     public UserController(UserService userService) {
@@ -18,38 +24,69 @@ public class UserController {
     }
 
     //    @RequestMapping(path = "/all", method = RequestMethod.GET) // Example deprecated
-    @GetMapping()
-    public List<User> getAll() {
-        return userService.getAll();
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAll() {
+        return new ResponseEntity<>(
+                userMapper.toUserDtoList(
+                        userService.getAll()),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/{id}")
-    public User getBiId(@PathVariable Integer id) {
-        return userService.getById(id);
+    public ResponseEntity<UserDto> getBiId(@PathVariable Integer id) {
+        return new ResponseEntity<>(
+                userMapper.toDto(
+                        userService.getById(id)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/filter1")
-    public List<User> getByEmailAndPhone(@RequestParam String email, @RequestParam Long phone) {
-        return userService.getByMailAndPhone(email, phone);
+    public ResponseEntity<List<UserDto>> getByEmailAndPhone(@RequestParam String email,
+                                                            @RequestParam Long phone) {
+        return new ResponseEntity<>(
+                userMapper.toUserDtoList(
+                        userService.getByEmailAndPhone(email, phone)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/filter2")
-    public List<User> getByNameAndPhoneAndAge(@RequestParam String name, @RequestParam(required = false) Long phone, @RequestParam(required = false) Integer age) {
-        return userService.getByNameAndPhoneAndAge(name, phone, age);
+    public ResponseEntity<List<UserDto>> getByNameOrPhoneOrAge(@RequestParam String name,
+                                                               @RequestParam(required = false) Long phone,
+                                                               @RequestParam(required = false) Integer age) {
+        return new ResponseEntity<>(
+                userMapper.toUserDtoList(
+                        userService.getByNameOrPhoneOrAge(name, phone, age)),
+                HttpStatus.OK);
     }
 
     @PostMapping
-    public User save(@RequestBody User user) {
-        return userService.save(user);
+    public ResponseEntity<UserDto> save(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(
+                userMapper.toDto(
+                        userService.save(userMapper.toModel(userDto))),
+                HttpStatus.CREATED);
+    }
+
+    @PutMapping()
+    public ResponseEntity<UserDto> update(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(
+                userMapper.toDto(
+                        userService.update(userMapper.toModel(userDto))),
+                HttpStatus.ACCEPTED);
+    }
+
+    //    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping()
+    public Integer delete(@RequestParam Integer id) {
+        return userService.delete(id);
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @RequestBody User user) {
-        return userService.update(id, user);
-    }
-
-    @DeleteMapping()
-    public Integer delete(@RequestParam int id) {
-        return userService.delete(id);
+    public ResponseEntity<IntegerDto> updatePhoneById(@PathVariable Integer id,
+                                      @RequestParam Long phone) {
+        return new ResponseEntity<>(
+                new IntegerDto(userService.updatePhoneById(id, phone)),
+                HttpStatus.OK);
     }
 }
